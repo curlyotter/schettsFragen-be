@@ -1,0 +1,3 @@
+GITHUB_QUESTIONS_REPO_URL: https://github.com/github-user/questions-repo
+GITHUB_QUESTIONS_REPO_OWNER: github-user
+GITHUB_QUESTIONS_REPO_BASE : default_branch(main/master)
