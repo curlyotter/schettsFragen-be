@@ -8,9 +8,10 @@ import (
 )
 
 const (
-	GithubQuestionsRepoURL   = "GITHUB_QUESTIONS_REPO_URL"
-	GithubQuestionsRepoOwner = "GITHUB_QUESTIONS_REPO_OWNER"
-	GithubQuestionsRepoBase  = "GITHUB_QUESTIONS_REPO_BASE"
+	GithubQuestionsRepoURL    = "GITHUB_QUESTIONS_REPO_URL"
+	GithubQuestionsRepoOwner  = "GITHUB_QUESTIONS_REPO_OWNER"
+	GithubQuestionsRepoBase   = "GITHUB_QUESTIONS_REPO_BASE"
+	GithubQuestionsPathToYAML = "GITHUB_QUESTIONS_PATH_TO_YAML"
 )
 
 func GetEnvvars() (map[string]string, error) {
@@ -29,6 +30,7 @@ func GetEnvvars() (map[string]string, error) {
 		GithubQuestionsRepoURL,
 		GithubQuestionsRepoOwner,
 		GithubQuestionsRepoBase,
+		GithubQuestionsPathToYAML,
 	)
 
 	if err != nil {

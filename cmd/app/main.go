@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/curlyotter/schettsFragen-be/pkg/environment"
-	"github.com/curlyotter/schettsFragen-be/pkg/git"
+	"github.com/curlyotter/schettsFragen-be/pkg/gitty"
 	"github.com/curlyotter/schettsFragen-be/pkg/question"
 	"github.com/curlyotter/schettsFragen-be/pkg/writer"
 	"github.com/google/go-github/github"
@@ -30,7 +30,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	if err = git.CreatePullRequest(ctx, ghClient, config); err != nil {
+	if err = gitty.Init(ctx, ghClient, config); err != nil {
 		log.Fatalln(err)
 	}
 }
