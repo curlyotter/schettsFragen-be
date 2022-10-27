@@ -30,7 +30,7 @@ func Init(ctx context.Context, ghClient *github.Client, config map[string]string
 	if err != nil {
 		return err
 	}
-	fmt.Println(commit)
+	log.Info().Msg(fmt.Sprintf("commited changes: %s", commit))
 
 	// TODO Push commit to github
 
@@ -69,6 +69,7 @@ func cloneQuestionsRepo(config map[string]string) (*git.Repository, error) {
 	if err != nil {
 		return nil, err
 	}
+	log.Debug().Msg(fmt.Sprintf("repository: %v\n", r))
 
 	return r, nil
 }
@@ -78,6 +79,7 @@ func commitQuestions(r *git.Repository, c map[string]string, now time.Time) (str
 	if err != nil {
 		return "", err
 	}
+	log.Debug().Msg(fmt.Sprintf("worktree: %v\n", w))
 
 	log.Info().Msg("add questions yaml to worktree")
 	path := c[environment.GithubQuestionsPathToYAML]
