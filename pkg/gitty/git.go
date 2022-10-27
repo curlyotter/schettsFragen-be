@@ -3,14 +3,15 @@ package gitty
 import (
 	"context"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/curlyotter/schettsFragen-be/pkg/environment"
+	"github.com/go-git/go-billy/v5/memfs"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/storage/memory"
 	"github.com/google/go-github/github"
+	"github.com/rs/zerolog/log"
 )
 
 // Init initializes the git and github workflow. It retrieves a github client and a given config to
@@ -19,6 +20,7 @@ func Init(ctx context.Context, ghClient *github.Client, config map[string]string
 	now := time.Now()
 	timestamp := now.Unix()
 
+	log.Info().Msg("clone questions repository")
 	r, err := cloneQuestionsRepo(config)
 	if err != nil {
 		return err
@@ -28,7 +30,7 @@ func Init(ctx context.Context, ghClient *github.Client, config map[string]string
 	if err != nil {
 		return err
 	}
-	log.Println(commit)
+	fmt.Println(commit)
 
 	// TODO Push commit to github
 
@@ -46,6 +48,7 @@ func Init(ctx context.Context, ghClient *github.Client, config map[string]string
 		MaintainerCanModify: &modifiable,
 	}
 
+	log.Info().Msg("create pull request to remote origin")
 	_, _, err = ghClient.PullRequests.Create(
 		ctx,
 		config[environment.GithubQuestionsRepoOwner],
@@ -60,7 +63,7 @@ func Init(ctx context.Context, ghClient *github.Client, config map[string]string
 }
 
 func cloneQuestionsRepo(config map[string]string) (*git.Repository, error) {
-	r, err := git.Clone(memory.NewStorage(), nil, &git.CloneOptions{
+	r, err := git.Clone(memory.NewStorage(), memfs.New(), &git.CloneOptions{
 		URL: config[environment.GithubQuestionsRepoURL],
 	})
 	if err != nil {
@@ -76,12 +79,14 @@ func commitQuestions(r *git.Repository, c map[string]string, now time.Time) (str
 		return "", err
 	}
 
+	log.Info().Msg("add questions yaml to worktree")
 	path := c[environment.GithubQuestionsPathToYAML]
 	_, err = w.Add(path)
 	if err != nil {
 		return "", err
 	}
 
+	log.Info().Msg("commit changes")
 	msg := fmt.Sprintf("add questions to %s", path)
 	commit, err := w.Commit(msg, &git.CommitOptions{
 		Author: &object.Signature{
